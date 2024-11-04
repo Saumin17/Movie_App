@@ -1,9 +1,35 @@
-import React from 'react'
+// src/App.js
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import HomePage from "./pages/HomePage";
+import SearchPage from "./pages/SearchPage";
+import BookmarksPage from "./pages/BookmarksPage";
+import "./App.css";
 
 const App = () => {
-  return (
-    <div>App</div>
-  )
-}
+  const [bookmarks, setBookmarks] = useState([]); // Initialize as an empty array
 
-export default App
+  // Load bookmarks from localStorage on app mount
+  useEffect(() => {
+    const storedBookmarks = JSON.parse(localStorage.getItem("bookmarks"));
+    if (Array.isArray(storedBookmarks)) {
+      setBookmarks(storedBookmarks); // Set bookmarks only if it's an array
+    }
+  }, []);
+
+  return (
+    <Router>
+      <div className="App">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<HomePage bookmarks={bookmarks} setBookmarks={setBookmarks} />} />
+          <Route path="/search" element={<SearchPage bookmarks={bookmarks} setBookmarks={setBookmarks} />} />
+          <Route path="/bookmarks" element={<BookmarksPage bookmarks={bookmarks} setBookmarks={setBookmarks} />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+};
+
+export default App;
