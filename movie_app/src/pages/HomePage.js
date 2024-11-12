@@ -1,9 +1,17 @@
 // src/pages/HomePage.js
 import React, { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, db } from "../firebaseConfig";
+import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import Toast from "../components/Toast";
+import MovieDetailPopup from "../components/MovieDetailPopup";
+
 const HomePage = ({ bookmarks, setBookmarks }) => {
   const [trendingMovies, setTrendingMovies] = useState([]);
   const [toastMessage, setToastMessage] = useState("");
+  const [user] = useAuthState(auth);
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
   const apiKey = "5391343148960f0d40e995a08483ca5c";
 
   useEffect(() => {
@@ -22,21 +30,38 @@ const HomePage = ({ bookmarks, setBookmarks }) => {
     fetchTrendingMovies();
   }, [apiKey]);
 
-  const handleAddBookmark = (movie) => {
+  const handleAddBookmark = async (movie) => {
+    if (!user) {
+      setToastMessage("Please log in to bookmark movies!");
+      return;
+    }
+
+    const userBookmarksRef = doc(db, "bookmarks", user.uid);
+    const userDoc = await getDoc(userBookmarksRef);
     const isBookmarked = bookmarks.some((b) => b.id === movie.id);
-  
+
     if (!isBookmarked) {
+      if (userDoc.exists()) {
+        await updateDoc(userBookmarksRef, {
+          movies: arrayUnion(movie)
+        });
+      } else {
+        await setDoc(userBookmarksRef, { movies: [movie] });
+      }
       const updatedBookmarks = [...bookmarks, movie];
       setBookmarks(updatedBookmarks);
-      localStorage.setItem("bookmarks", JSON.stringify(updatedBookmarks));
       setToastMessage("Movie added to bookmarks!");
-      return true; // Movie was added
     } else {
-      setToastMessage("This movie is already bookmarked!"); 
-      return false; // Movie was already bookmarked
+      setToastMessage("This movie is already bookmarked!");
     }
   };
+  
+  const handleMovieClick = (movie) => {
+    setSelectedMovie(movie);
+    setShowPopup(true); 
+  };
 
+  const closePopup = () => setShowPopup(false);
   const closeToast = () => setToastMessage("");
 
   return (
@@ -52,6 +77,7 @@ const HomePage = ({ bookmarks, setBookmarks }) => {
                 <img
                   src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                   alt={movie.title}
+                  onClick={() => handleMovieClick(movie)}
                 />
                 <h3>{movie.title}</h3>
                 <p>Release Date: {movie.release_date}</p>
@@ -69,6 +95,9 @@ const HomePage = ({ bookmarks, setBookmarks }) => {
           <p>No trending movies available.</p>
         )}
       </div>
+      {showPopup && selectedMovie && (
+        <MovieDetailPopup movie={selectedMovie} onClose={closePopup} />
+      )}
     </div>
   );
 };

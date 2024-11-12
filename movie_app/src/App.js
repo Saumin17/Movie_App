@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import SearchPage from "./pages/SearchPage";
 import BookmarksPage from "./pages/BookmarksPage";
+import LoginPage from "./pages/LoginPage";
 import "./App.css";
 
 const App = () => {
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/" element={<HomePage bookmarks={bookmarks} setBookmarks={setBookmarks} />} />
           <Route path="/search" element={<SearchPage bookmarks={bookmarks} setBookmarks={setBookmarks} />} />
           <Route path="/bookmarks" element={<BookmarksPage bookmarks={bookmarks} setBookmarks={setBookmarks} />} />
+          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </div>
     </Router>

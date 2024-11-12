@@ -1,30 +1,63 @@
 // src/pages/BookmarksPage.js
 import React, { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, db } from "../firebaseConfig";
+import { doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
 import MovieItem from "../components/MovieItem";
-import Toast from "../components/Toast"; // Import the Toast component
+import Toast from "../components/Toast";
+import MovieDetailPopup from "../components/MovieDetailPopup";
 
 const BookmarksPage = ({ bookmarks, setBookmarks }) => {
   const [toastMessage, setToastMessage] = useState("");
-
-  const handleRemoveBookmark = (movie) => {
-    const updatedBookmarks = bookmarks.filter((b) => b.id !== movie.id);
-    setBookmarks(updatedBookmarks);
-    localStorage.setItem("bookmarks", JSON.stringify(updatedBookmarks));
-    setToastMessage("Bookmark removed successfully!"); // Set toast message
-  };
+  const [user] = useAuthState(auth);
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
-    const storedBookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
-    setBookmarks(storedBookmarks);
-  }, [setBookmarks]);
+    const fetchBookmarks = async () => {
+      if (user) {
+        const userBookmarksRef = doc(db, "bookmarks", user.uid);
+        const userDoc = await getDoc(userBookmarksRef);
 
-  const closeToast = () => setToastMessage(""); // Function to close the toast
+        if (userDoc.exists()) {
+          setBookmarks(userDoc.data().movies || []);
+        } else {
+          setBookmarks([]); // No bookmarks for the user
+        }
+      }
+    };
+
+    fetchBookmarks();
+  }, [user, setBookmarks]);
+
+  const handleRemoveBookmark = async (movie) => {
+    if (user) {
+      const userBookmarksRef = doc(db, "bookmarks", user.uid);
+
+      // Update Firestore by removing the movie
+      await updateDoc(userBookmarksRef, {
+        movies: arrayRemove(movie)
+      });
+
+      // Update state and show confirmation toast
+      const updatedBookmarks = bookmarks.filter((b) => b.id !== movie.id);
+      setBookmarks(updatedBookmarks);
+      setToastMessage("Bookmark removed successfully!");
+    }
+  };
+
+  const handleMovieClick = (movie) => {
+    setSelectedMovie(movie);
+    setShowPopup(true); 
+  };
+
+  const closePopup = () => setShowPopup(false);
+  const closeToast = () => setToastMessage(""); 
 
   return (
     <div>
       <h1>Bookmarked Movies</h1>
 
-      {/* Display Toast if there's a toast message */}
       {toastMessage && <Toast message={toastMessage} onClose={closeToast} />}
 
       <div className="movie-list">
@@ -36,6 +69,7 @@ const BookmarksPage = ({ bookmarks, setBookmarks }) => {
                 handleBookmark={handleRemoveBookmark}
                 isBookmarked={true}
                 className="movie-item"
+                onClick={() => handleMovieClick(bookmark)}
               />
             </div>
           ))
@@ -43,6 +77,9 @@ const BookmarksPage = ({ bookmarks, setBookmarks }) => {
           <p>No bookmarks added yet.</p>
         )}
       </div>
+      {showPopup && selectedMovie && (
+        <MovieDetailPopup movie={selectedMovie} onClose={closePopup} />
+      )}
     </div>
   );
 };

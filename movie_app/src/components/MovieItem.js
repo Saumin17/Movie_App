@@ -1,27 +1,25 @@
 // src/components/MovieItem.js
 import React from "react";
-import "./MovieItem.css";
 
-const MovieItem = ({ movie, handleBookmark, isBookmarked }) => {
+const MovieItem = ({ movie, handleBookmark, isBookmarked, onClick }) => {
   return (
-    <div className="movie-item">
+    <div className="movie-item" onClick={() => onClick(movie)}>
+      <img
+        src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+        alt={movie.title}
+      />
       <h3>{movie.title}</h3>
-      {movie.poster_path ? (
-        <img
-          src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
-          alt={`${movie.title} Poster`}
-        />
-      ) : (
-        <div className="no-image">No Image Available</div>
-      )}
-      {handleBookmark && (
-        <button
-          className={`bookmark-button ${isBookmarked ? "bookmarked" : ""}`}
-          onClick={() => handleBookmark(movie)}
-        >
-          {isBookmarked ? "★" : "☆"}
-        </button>
-      )}
+      <p>Release Date: {movie.release_date}</p>
+      <p>Rating: {movie.vote_average}</p>
+      <button
+        className={`bookmark-button ${isBookmarked ? "bookmarked" : ""}`}
+        onClick={(e) => {
+          e.stopPropagation(); // Prevent this click from triggering the movie popup
+          handleBookmark(movie);
+        }}
+      >
+        ★
+      </button>
     </div>
   );
 };
