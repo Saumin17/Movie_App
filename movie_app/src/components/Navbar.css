@@ -13,20 +13,20 @@ nav {
 }
 
 nav h1 {
-  color: #ffa500;
+  color: #f3ce13;
   margin: 0;
   font-size: 1.8em; /* Increased font size */
   font-family: 'Arial', sans-serif;
-  text-shadow: 0 0 5px rgba(255, 165, 0, 0.6), 
-               0 0 10px rgba(255, 165, 0, 0.5), 
-               0 0 15px rgba(255, 165, 0, 0.4); /* Glowy effect */
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.8),
+             0 0 20px rgba(0, 0, 0, 0.7),
+             0 0 30px rgba(0, 0, 0, 0.6);
   transition: text-shadow 0.3s ease; /* Smooth transition */
 }
 
 nav h1:hover {
-  text-shadow: 0 0 10px rgba(255, 165, 0, 0.8),
-               0 0 20px rgba(255, 165, 0, 0.7),
-               0 0 30px rgba(255, 165, 0, 0.6); /* Stronger glow on hover */
+  text-shadow: 0 0 5px rgba(243, 206, 19, 0.6), 
+               0 0 10px rgba(243, 206, 19, 0.5), 
+               0 0 15px rgba(243, 206, 19, 0.4); 
 }
 
 nav ul {
@@ -48,7 +48,7 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-  color: #ffa500; /* Change color on hover */
+  color: #f3ce13; /* Change color on hover */
   transform: scale(1.05); /* Slight scale effect on hover */
 }
 
@@ -63,7 +63,7 @@ nav ul li a:hover {
 }
 
 .nav-button:hover {
-  color: #ffa500;
+  color: #f3ce13;
   transform: scale(1.05); /* Slight scale effect on hover */
 }
 
@@ -72,14 +72,15 @@ nav ul li a:hover {
   display: flex;
   align-items: center;
   margin-left: 10px;
+  margin-top: 12px;
+  margin-bottom: 15px;
 }
 
 .search-form input {
   padding: 8px 12px;
-  margin-top: 12px;
-  margin-right: 5px;
-  border: 2px solid #ffa500;
-  border-radius: 20px;
+  margin-right: 10px;
+  border: 2px solid #f3ce13;
+  border-radius: 5px;
   outline: none;
   transition: border-color 0.3s, box-shadow 0.3s;
   box-shadow: 0 0 10px rgba(255, 165, 0, 0.5); /* Soft glow around input */
@@ -93,18 +94,17 @@ nav ul li a:hover {
 
 .search-form button {
   padding: 8px 16px;
-  margin-top: 12px;
   border: none;
-  border-radius: 20px;
-  background-color: #ffa500;
-  color: white;
+  border-radius: 5px;
+  background-color: #f3ce13;
+  color: black;
   cursor: pointer;
   transition: background-color 0.3s, box-shadow 0.3s;
   box-shadow: 0 0 10px rgba(255, 165, 0, 0.5); /* Soft glow around button */
 }
 
 .search-form button:hover {
-  background-color: #ff8c00;
+  background-color: #f3ce13;
   box-shadow: 0 0 15px rgba(255, 140, 0, 0.8); /* Brighter glow on hover */
 }
 
@@ -129,11 +129,12 @@ body.dark-mode .search-form input:focus {
 }
 
 body.dark-mode .search-form button {
-  background-color: #ffa500;
+  color: white;
+  background-color: rgb(36, 29, 29);
 }
 
 body.dark-mode .search-form button:hover {
-  background-color: #ff8c00;
+  background-color: rgb(36, 29, 29);
   box-shadow: 0 0 15px rgba(255, 140, 0, 0.8);
 }
 
@@ -188,7 +189,7 @@ body.dark-mode .search-form button:hover {
 }
 
 .switch.on {
-  background-color: #ffa500;
+  background-color: #f3ce13;
 }
 
 .switch .slider {
