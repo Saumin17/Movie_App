@@ -35,7 +35,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigate("/");
+      navigate("/Movie_App");
       window.location.reload();
     } catch (error) {
       console.error("Error logging out:", error);
@@ -58,7 +58,7 @@ const Navbar = () => {
       <h1>Movie Search App</h1>
       <ul>
         <li>
-          <Link to="/">Home</Link>
+          <Link to="/Movie_App">Home</Link>
         </li>
         <li>
           <Link to="/bookmarks">Bookmarks</Link>

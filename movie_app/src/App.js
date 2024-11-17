@@ -24,7 +24,7 @@ const App = () => {
       <div className="App">
         <Navbar />
         <Routes>
-          <Route path="/" element={<HomePage bookmarks={bookmarks} setBookmarks={setBookmarks} />} />
+          <Route path="/Movie_App" element={<HomePage bookmarks={bookmarks} setBookmarks={setBookmarks} />} />
           <Route path="/search" element={<SearchPage bookmarks={bookmarks} setBookmarks={setBookmarks} />} />
           <Route path="/bookmarks" element={<BookmarksPage bookmarks={bookmarks} setBookmarks={setBookmarks} />} />
           <Route path="/login" element={<LoginPage />} />

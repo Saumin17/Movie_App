@@ -22,7 +22,7 @@ const LoginPage = () => {
         await signInWithEmailAndPassword(auth, email, password);
         setToastMessage("Successfully logged in!");
       }
-      navigate("/");
+      navigate("/Movie_App");
     } catch (error) {
         setToastMessage(error.message);
     }
